@@ -1,0 +1,2 @@
+# lifetime_love_backend
+我的lifetime_love项目的django后端代码

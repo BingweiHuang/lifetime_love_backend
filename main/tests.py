@@ -75,11 +75,32 @@ class TestCase1(TestCase):
     #     uname=Lower('lit_en_title')
     # ).order_by('uname').values('lit_en_title')
 
-    qs = FigureCategory.objects.all();
+    # qs = FigureCategory.objects.all();
 
+    fig_idList = [1, 2, 3]
+    figureList = []
+
+    qs = Literature.objects.filter(lit_id__in=fig_idList)
+    literatureList = []
 
     for lit in qs:
-        print(model_to_dict(lit)) # model_to_dict 从model转成json格式
+        literatureList.append(model_to_dict(lit))
+        figureList.append(model_to_dict(lit.fig))
+
+    figureDict = {}
+    for fig in figureList:
+        figureDict[fig.get('fig_id')] = fig
+
+    for lit in literatureList:
+        print(lit)
+
+    for fig in figureList:
+        print(fig)
+
+    print(figureDict)
+    # for lit in qs:
+    #     print(lit.figure)
+    #     print(model_to_dict(lit)) # model_to_dict 从model转成json格式
         # print(lit)
 
     # res = model_to_dict(Literature.objects.get(lit_id=1))

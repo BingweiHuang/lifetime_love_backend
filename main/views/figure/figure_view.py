@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from datetime import datetime
 
 from main.models.models import Figure
+from main.models.models import FigureCategory
 
 
 class FigureView(APIView):
@@ -34,11 +35,29 @@ class FigureView(APIView):
             if fig_nationality:
                 kwargs["fig_nationality"] = fig_nationality
 
-            qs = Figure.objects.filter(**kwargs)
-            datas = []
-            for lit in qs:
-                datas.append(model_to_dict(lit))
+            qs = Figure.objects.filter(**kwargs) # 按条件筛
 
+            figureList = [] # 存放人物查询结果
+            fig_idList = [] # 存放人物id
+            for fig in qs:
+                figureList.append(model_to_dict(fig))
+                fig_idList.append(fig.fig_id)
+
+            dict = {} # 为每个查询到的人物id建立映射到人物类别列表
+            for fig_id in fig_idList:
+                dict[fig_id] = []
+
+            qs = FigureCategory.objects.filter(fig_id__in=fig_idList) # 按照这些人物id查类别表
+
+            for fig_cate in qs: # 建立人物id到人物类别名称列表的映射
+                dict[fig_cate.fig_id].append(fig_cate.cate.cate_name)
+
+            for figure in figureList: # 将每个人物的类别名称列表加入到他的figure生成带有人物类别名称列表的完整figureList
+                figure['fig_cate'] = dict[figure.get('fig_id')]
+
+            datas = {
+                'figureList': figureList,
+            }
             return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()

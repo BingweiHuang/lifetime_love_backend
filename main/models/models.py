@@ -67,6 +67,7 @@ class Figure(models.Model):
     fig_deathday = models.DateField(blank=True, null=True)
     fig_day_correction = models.IntegerField()
     fig_detail = models.CharField(max_length=255)
+    fig_img_address = models.CharField(max_length=255, blank=True, null=True)
     fig_nationality = models.CharField(max_length=30, blank=True, null=True)
     fig_province = models.CharField(max_length=30, blank=True, null=True)
     fig_city = models.CharField(max_length=30, blank=True, null=True)

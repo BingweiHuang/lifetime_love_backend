@@ -34,11 +34,22 @@ class LiteratureView(APIView):
             if fig_id:
                 kwargs["fig_id"] = fig_id
 
-            qs = Literature.objects.filter(**kwargs)
-            datas = []
-            for lit in qs:
-                datas.append(model_to_dict(lit))
+            qs = Literature.objects.filter(**kwargs) # 按条件筛
 
+            literatureList = [] # 存放查询书籍的结果
+            figureList = [] # 存放书籍的作者
+            for lit in qs:
+                literatureList.append(model_to_dict(lit))
+                figureList.append(model_to_dict(lit.fig))
+
+            figureDict = {} # 存放作者id到作者的映射
+            for fig in figureList:
+                figureDict[fig.get('fig_id')] = fig
+
+            datas = {
+                "literatureList": literatureList,
+                "figureDict": figureDict,
+            }
             return Response(datas, 200)
         except Exception as e:
             traceback.print_exc()

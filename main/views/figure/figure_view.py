@@ -54,7 +54,7 @@ class FigureView(APIView):
 
             for figure in figureList: # 将每个人物的类别名称列表加入到他的figure生成带有人物类别名称列表的完整figureList
                 figure['fig_cate'] = dict[figure.get('fig_id')]
-
+            # print(figureList)
             datas = {
                 'figureList': figureList,
             }

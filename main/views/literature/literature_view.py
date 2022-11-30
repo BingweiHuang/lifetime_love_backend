@@ -46,6 +46,8 @@ class LiteratureView(APIView):
             for fig in figureList:
                 figureDict[fig.get('fig_id')] = fig
 
+            # print(literatureList)
+
             datas = {
                 "literatureList": literatureList,
                 "figureDict": figureDict,

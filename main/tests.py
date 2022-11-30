@@ -77,27 +77,27 @@ class TestCase1(TestCase):
 
     # qs = FigureCategory.objects.all();
 
-    fig_idList = [1, 2, 3]
-    figureList = []
+    qs = Figure.objects.filter(fig_id=1)  # 按条件筛
 
-    qs = Literature.objects.filter(lit_id__in=fig_idList)
-    literatureList = []
+    figureList = []  # 存放人物查询结果
+    fig_idList = []  # 存放人物id
+    for fig in qs:
+        figureList.append(model_to_dict(fig))
+        fig_idList.append(fig.fig_id)
 
-    for lit in qs:
-        literatureList.append(model_to_dict(lit))
-        figureList.append(model_to_dict(lit.fig))
+    dict = {}  # 为每个查询到的人物id建立映射到人物类别列表
+    for fig_id in fig_idList:
+        dict[fig_id] = []
 
-    figureDict = {}
-    for fig in figureList:
-        figureDict[fig.get('fig_id')] = fig
+    qs = FigureCategory.objects.filter(fig_id__in=fig_idList)  # 按照这些人物id查类别表
 
-    for lit in literatureList:
-        print(lit)
+    for fig_cate in qs:  # 建立人物id到人物类别名称列表的映射
+        dict[fig_cate.fig_id].append(fig_cate.cate.cate_name)
 
-    for fig in figureList:
-        print(fig)
+    for figure in figureList:  # 将每个人物的类别名称列表加入到他的figure生成带有人物类别名称列表的完整figureList
+        figure['fig_cate'] = dict[figure.get('fig_id')]
 
-    print(figureDict)
+    print(figureList)
     # for lit in qs:
     #     print(lit.figure)
     #     print(model_to_dict(lit)) # model_to_dict 从model转成json格式
